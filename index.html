@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ethereum Rainbow Chart - Long-term Price Trends</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <header>
+        <h1>Ethereum Rainbow Chart</h1>
+        <p>Long-term price trends visualized as rainbow bands</p>
+    </header>
+
+    <main>
+        <div id="current-status">
+            <div class="loading" id="loading-indicator">Loading data...</div>
+            <div id="status-content" class="hidden">
+                <div class="current-price">
+                    <span class="label">Current ETH Price:</span>
+                    <span class="price-value" id="current-price">$0.00</span>
+                </div>
+                <div class="current-band">
+                    <span class="label">Current Band:</span>
+                    <span class="band-name" id="current-band-name">--</span>
+                </div>
+                <div class="sentiment">
+                    <span class="label">Sentiment:</span>
+                    <span class="sentiment-value" id="sentiment-value">--</span>
+                </div>
+                <div class="last-updated">
+                    <span class="label">Last Updated:</span>
+                    <span class="updated-value" id="last-updated">--</span>
+                </div>
+                <button id="refresh-btn">↻ Refresh</button>
+            </div>
+        </div>
+        
+        <div class="chart-container">
+            <canvas id="rainbowChart"></canvas>
+        </div>
+        
+<div id="legend">
+    <h3>Rainbow Bands</h3>
+    <div id="legend-items"></div>
+    <div class="api-info">
+        <span class="label">Data sources:</span>
+        <span id="data-sources">Loading...</span>
+    </div>
+</div>
+
+
+    </main>
+
+    <footer>
+        <p>Data source: Public APIs &bull; Not financial advice &bull; Past performance does not indicate future results</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3.0.0/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
