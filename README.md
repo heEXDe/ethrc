@@ -5,7 +5,7 @@ A visualization of Ethereum's long-term price trends using rainbow bands based o
 ## Features
 
 - 🌈 **Rainbow Bands Visualization**: 10 colored bands showing different price zones from "BUY" to "Maximum Bubble Territory"
-- 📊 **Historical Price Data**: Complete Ethereum price history from genesis (July 30, 2015) to present
+- 📊 **Historical Price Data**: Un-complete Ethereum price history
 - 📈 **Logarithmic Scale**: Accurate representation of exponential price growth
 - 🎯 **Current Price Assessment**: Real-time display of current ETH price and its position in the rainbow
 - 🔄 **Automatic Updates**: Scheduled data refreshes with manual refresh option
@@ -16,7 +16,7 @@ A visualization of Ethereum's long-term price trends using rainbow bands based o
 
 The rainbow chart uses logarithmic regression to identify long-term price trends:
 
-1. **Data Collection**: Historical daily Ethereum prices from genesis date
+1. **Data Collection**: Historical daily Ethereum prices (not from the genesis)
 2. **Logarithmic Regression**: Calculates best-fit line: `ln(price) = slope × days + intercept`
 3. **Band Creation**: 10 bands created by multiplying the regression line by specific factors:
    - BUY (0.25× baseline)
@@ -29,44 +29,6 @@ The rainbow chart uses logarithmic regression to identify long-term price trends
    - FUDDING (1.60× baseline)
    - SELL (2.10× baseline)
    - MAXIMUM BUBBLE (3.00× baseline)
-
-## Data Sources
-
-The application automatically tries multiple data sources:
-
-### Historical Price Data (for Rainbow Chart)
-
-1. **Binance API** (Primary - Recommended)
-   - Provides comprehensive historical ETH prices
-   - CORS-friendly, works directly from browser
-   - No API key required
-   - Currently provides 400-500+ data points
-
-2. **CoinCap API** (Secondary)
-   - Provides historical ETH price data
-   - CORS-friendly
-   - No API key required
-   - Used as fallback if Binance fails
-
-3. **CoinGecko API** (Tertiary)
-   - Provides historical price data
-   - Has CORS issues in some browsers
-   - Free, no API key required
-   - Used as last resort fallback
-
-### Current Price Data
-
-1. **Etherscan API** (Preferred for accuracy)
-   - Provides real-time ETH price
-   - Requires API key (optional)
-   - **Does NOT provide historical data** on free tier
-   - Used to verify and cross-check current price
-
-2. **Binance API** (Fallback)
-   - Current price from last historical data point
-   - Used if Etherscan API key not provided
-
-**Important Note:** Etherscan's free tier API only provides current ETH price and basic statistics. It does NOT provide historical price data needed for the rainbow chart. That's why we use Binance/CoinCap for historical data and optionally Etherscan for verifying the current price.
 
 ## Installation
 
@@ -101,8 +63,6 @@ php -S localhost:8000
 
 Then visit `http://localhost:8000`
 
-## Configuration
-
 ### Etherscan API Key (Optional)
 
 For preferential API access, add your Etherscan API key:
@@ -114,9 +74,6 @@ For preferential API access, add your Etherscan API key:
 ```javascript
 const ETHERSCAN_API_KEY = 'your_actual_api_key_here';
 ```
-
-**Note**: The app works without an API key using CoinGecko as a fallback.
-
 ## Browser Support
 
 - Modern browsers with ES6+ support
@@ -129,32 +86,9 @@ const ETHERSCAN_API_KEY = 'your_actual_api_key_here';
 
 - **Chart.js** (v4.4.0) - Chart visualization
 - **chartjs-adapter-date-fns** (v3.0.0) - Date handling for charts
+- 
 
 Both loaded via CDN for zero-build deployment.
-
-## Color Legend
-
-| Band | Color | Description |
-|------|-------|-------------|
-| BUY | 🔵 Blue | Extreme buying opportunity |
-| BUY PRICE ZONE | 🟢 Green | Strong buy zone |
-| ACCUMULATE | 🟢 Light Green | Good accumulation area |
-| HODL | 🟡 Yellow | Hold and wait |
-| STILL CHEAP | 🟠 Orange | Near rainbow center |
-| MOVE ALONG | 🟠 Orange-Red | Price moving up |
-| STAY COOL | 🔴 Red | Remain calm |
-| FUDDING | 🔴 Dark Red | Ignore FUD |
-| SELL | 🔴 Crimson | Consider selling |
-| MAXIMUM BUBBLE | 🔴 Deep Red | Maximum bubble territory |
-
-## Current Price Assessment
-
-The status panel shows:
-
-- **Current ETH Price**: Live price with color-coded band indication
-- **Current Band**: Which rainbow band contains the current price
-- **Sentiment**: Brief description of the current market phase
-- **Last Updated**: Timestamp of last data refresh
 
 ## Important Disclaimer
 
@@ -163,20 +97,6 @@ The status panel shows:
 The Rainbow Chart is meant to be a fun way of looking at historical long-term price movements, disregarding daily volatility "noise". There is no scientific basis underpinning it, and past performance is not an indication of future results.
 
 You cannot predict the price of Ethereum with a rainbow!
-
-## Development
-
-### Project Structure
-
-```
-eth_rainbow_chart/
-├── index.html          # Main HTML file
-├── css/
-│   └── styles.css      # Styles and responsive design
-├── js/
-│   └── app.js          # Main application logic
-└── README.md           # This file
-```
 
 ### Key Components
 
@@ -212,21 +132,17 @@ const BAND_FACTORS     // Array of band multiplier factors
 - Clear browser cache
 - Try a different browser
 
-### Rate Limiting
-
-- Etherscan free tier: 5 calls/second
-- CoinGecko: Rate limits apply
-- Local caching reduces API calls
-
-## License
+## Licenses
 
 This project is for educational and entertainment purposes only.
+This project is licensed under MIT license.
+ChartJS and BootStrap libraries are both licensed under MIT license (LICENSES folder)
 
 ## Credits
 
-- Inspired by the Bitcoin Rainbow Chart from [Blockchain Center](https://www.blockchaincenter.net/bitcoin-rainbow-chart/)
-- Data sources: [Etherscan](https://etherscan.io) and [CoinGecko](https://www.coingecko.com)
-- Built with [Chart.js](https://www.chartjs.org)
+Inspired by: 
+- the Bitcoin Rainbow Chart from [Blockchain Center](https://www.blockchaincenter.net/bitcoin-rainbow-chart/)
+- the Ethereum Rainbow Chart from [coinstats](https://coinstats.app/ethereum-rainbow-chart/)
 
 ## Future Enhancements
 
@@ -242,5 +158,3 @@ Potential improvements:
 - [ ] Dark/light mode toggle
 
 ---
-
-Made with ❤️ for the Ethereum community

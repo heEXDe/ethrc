@@ -16,28 +16,28 @@ const BAND_COLORS = [
 ];
 
 const BAND_NAMES = [
+    'EXTREME BUY',
     'BUY',
-    'BUY PRICE ZONE',
+    'BUY ZONE',
     'ACCUMULATE',
     'HODL',
     'STILL CHEAP',
     'MOVE ALONG',
-    'STAY COOL',
-    'FUDDING',
-    'SELL',
+    'FUD TIME',
+    'SELL ZONE',
     'MAXIMUM BUBBLE'
 ];
 
 const BAND_DESCRIPTIONS = [
     'Extreme buying opportunity',
-    'Strong buy zone',
+    'Strong buy opportunity',
     'Good accumulation area',
     'Hold and wait',
     'Near rainbow center',
     'Price moving up',
-    'Remain calm',
-    'Ignore FUD',
+    'Ignore the FUD',
     'Consider selling',
+    'Sell zone',
     'Maximum bubble territory'
 ];
 
@@ -75,6 +75,13 @@ class EthereumRainbowChart {
 
     async init() {
         document.getElementById('refresh-btn').addEventListener('click', () => this.refreshData());
+
+        document.getElementById('zoom-in-btn').addEventListener('click', () => this.zoomIn());
+        document.getElementById('zoom-out-btn').addEventListener('click', () => this.zoomOut());
+        document.getElementById('pan-left-btn').addEventListener('click', () => this.panLeft());
+        document.getElementById('pan-right-btn').addEventListener('click', () => this.panRight());
+        document.getElementById('pan-up-btn').addEventListener('click', () => this.panUp());
+        document.getElementById('pan-down-btn').addEventListener('click', () => this.panDown());
 
         const cacheKey = 'eth_rainbow_data';
         const cachedData = this.getFromCache(cacheKey);
@@ -366,7 +373,7 @@ class EthereumRainbowChart {
 
         const startDate = new Date('2015-07-30');
         const endDate = new Date();
-        endDate.setFullYear(endDate.getFullYear() + 1);
+        endDate.setFullYear(endDate.getFullYear() + 2);
 
         const allDates = [];
         const currentDate = new Date(startDate);
@@ -479,13 +486,13 @@ class EthereumRainbowChart {
                 y: b.bands[i]
             }));
 
-            const color = BAND_COLORS[i];
+            const fillColor = i === 0 ? BAND_COLORS[0] : BAND_COLORS[i - 1];
 
             datasets.push({
                 label: BAND_NAMES[i],
                 data: [...lowerData, ...upperData.reverse()],
-                backgroundColor: `${color}33`,
-                borderColor: color,
+                backgroundColor: fillColor,
+                borderColor: fillColor,
                 borderWidth: 1,
                 fill: true,
                 pointRadius: 0,
@@ -530,7 +537,11 @@ class EthereumRainbowChart {
         }
 
         const minDate = this.oldestDataDate || this.priceHistory[0]?.date || new Date('2015-07-30');
-        const maxDate = this.zoomMaxDate || new Date();
+        const maxDate = this.zoomMaxDate || (() => {
+            const d = new Date();
+            d.setFullYear(d.getFullYear() + 2);
+            return d;
+        })();
         const zoomedMinDate = this.zoomMinDate || minDate;
 
         const config = {
@@ -797,7 +808,11 @@ class EthereumRainbowChart {
         const newMax = center + newRange / 2;
 
         const absoluteMin = this.oldestDataDate;
-        const absoluteMax = new Date();
+        const absoluteMax = (() => {
+            const d = new Date();
+            d.setFullYear(d.getFullYear() + 2);
+            return d;
+        })();
 
         this.zoomMinDate = newMin < absoluteMin ? absoluteMin : newMin;
         this.zoomMaxDate = newMax > absoluteMax ? absoluteMax : newMax;
@@ -812,9 +827,102 @@ class EthereumRainbowChart {
         this.zoomMinDate = null;
         this.zoomMaxDate = null;
         const minDate = this.oldestDataDate || this.priceHistory[0]?.date || new Date('2015-07-30');
+        const maxDate = (() => {
+            const d = new Date();
+            d.setFullYear(d.getFullYear() + 2);
+            return d;
+        })();
 
         this.chart.options.scales.x.min = minDate;
-        this.chart.options.scales.x.max = new Date();
+        this.chart.options.scales.x.max = maxDate;
+        this.chart.update();
+    }
+
+    panLeft() {
+        if (!this.chart) return;
+
+        const xAxis = this.chart.scales.x;
+        const currentMin = xAxis.min;
+        const currentMax = xAxis.max;
+        const range = currentMax - currentMin;
+        const panAmount = range * 0.25;
+        const absoluteMin = this.oldestDataDate || new Date('2015-07-30');
+
+        let newMin = currentMin - panAmount;
+        let newMax = currentMax - panAmount;
+
+        if (newMin < absoluteMin) {
+            newMin = absoluteMin;
+            newMax = absoluteMin + range;
+        }
+
+        this.zoomMinDate = newMin;
+        this.zoomMaxDate = newMax;
+        this.chart.options.scales.x.min = this.zoomMinDate;
+        this.chart.options.scales.x.max = this.zoomMaxDate;
+        this.chart.update();
+    }
+
+    panRight() {
+        if (!this.chart) return;
+
+        const xAxis = this.chart.scales.x;
+        const currentMin = xAxis.min;
+        const currentMax = xAxis.max;
+        const range = currentMax - currentMin;
+        const panAmount = range * 0.25;
+        const absoluteMax = (() => {
+            const d = new Date();
+            d.setFullYear(d.getFullYear() + 2);
+            return d;
+        })();
+
+        let newMin = currentMin + panAmount;
+        let newMax = currentMax + panAmount;
+
+        if (newMax > absoluteMax) {
+            newMax = absoluteMax;
+            newMin = absoluteMax - range;
+        }
+
+        this.zoomMinDate = newMin;
+        this.zoomMaxDate = newMax;
+        this.chart.options.scales.x.min = this.zoomMinDate;
+        this.chart.options.scales.x.max = this.zoomMaxDate;
+        this.chart.update();
+    }
+
+    panUp() {
+        if (!this.chart) return;
+
+        const yAxis = this.chart.scales.y;
+        const currentMin = yAxis.min;
+        const currentMax = yAxis.max;
+        const range = currentMax - currentMin;
+        const panAmount = range * 0.25;
+
+        const newMin = currentMin + panAmount;
+        const newMax = currentMax + panAmount;
+
+        this.chart.options.scales.y.min = newMin;
+        this.chart.options.scales.y.max = newMax;
+        this.chart.update();
+    }
+
+    panDown() {
+        if (!this.chart) return;
+
+        const yAxis = this.chart.scales.y;
+        const currentMin = yAxis.min;
+        const currentMax = yAxis.max;
+        const range = currentMax - currentMin;
+        const panAmount = range * 0.25;
+
+        const newMin = Math.max(0.001, currentMin - panAmount);
+        const newMax = Math.max(0.01, currentMax - panAmount);
+
+        this.chart.options.scales.y.min = newMin;
+        this.chart.options.scales.y.max = newMax;
         this.chart.update();
     }
 }

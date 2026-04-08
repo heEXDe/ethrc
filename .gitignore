@@ -21,4 +21,5 @@ yarn-error.log*
 
 # Temporary files
 .tmp/
-temp/
+temp/AGENTS.md
+CONFIG.md
