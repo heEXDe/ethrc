@@ -83,6 +83,17 @@ class EthereumRainbowChart {
         document.getElementById('pan-up-btn').addEventListener('click', () => this.panUp());
         document.getElementById('pan-down-btn').addEventListener('click', () => this.panDown());
 
+        window.addEventListener('keydown', (e) => {
+            switch(e.key) {
+                case 'ArrowUp': this.panUp(); break;
+                case 'ArrowDown': this.panDown(); break;
+                case 'ArrowLeft': this.panLeft(); break;
+                case 'ArrowRight': this.panRight(); break;
+            }
+        });
+
+        document.getElementById('reset-btn').addEventListener('click', () => this.resetZoom());
+
         const cacheKey = 'eth_rainbow_data';
         const cachedData = this.getFromCache(cacheKey);
 
@@ -835,6 +846,8 @@ class EthereumRainbowChart {
 
         this.chart.options.scales.x.min = minDate;
         this.chart.options.scales.x.max = maxDate;
+        this.chart.options.scales.y.min = undefined;
+        this.chart.options.scales.y.max = undefined;
         this.chart.update();
     }
 
@@ -898,11 +911,10 @@ class EthereumRainbowChart {
         const yAxis = this.chart.scales.y;
         const currentMin = yAxis.min;
         const currentMax = yAxis.max;
-        const range = currentMax - currentMin;
-        const panAmount = range * 0.25;
+        const panFactor = 1.2;
 
-        const newMin = currentMin + panAmount;
-        const newMax = currentMax + panAmount;
+        const newMin = currentMin * panFactor;
+        const newMax = currentMax * panFactor;
 
         this.chart.options.scales.y.min = newMin;
         this.chart.options.scales.y.max = newMax;
@@ -915,11 +927,10 @@ class EthereumRainbowChart {
         const yAxis = this.chart.scales.y;
         const currentMin = yAxis.min;
         const currentMax = yAxis.max;
-        const range = currentMax - currentMin;
-        const panAmount = range * 0.25;
+        const panFactor = 1.2;
 
-        const newMin = Math.max(0.001, currentMin - panAmount);
-        const newMax = Math.max(0.01, currentMax - panAmount);
+        const newMin = Math.max(0.001, currentMin / panFactor);
+        const newMax = Math.max(0.01, currentMax / panFactor);
 
         this.chart.options.scales.y.min = newMin;
         this.chart.options.scales.y.max = newMax;
