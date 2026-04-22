@@ -2,6 +2,10 @@
 
 A visualization of Ethereum's long-term price trends using rainbow bands based on logarithmic regression analysis, inspired by the Bitcoin Rainbow Chart from Blockchain Center.
 
+## IPFS gateway links
+
+[https://bafybeihub3ziivetqiyflhe4qaqfzmkahc7eokvdgtmy3bfdcmylfu3m34.ipfs.dweb.link/](https://bafybeihub3ziivetqiyflhe4qaqfzmkahc7eokvdgtmy3bfdcmylfu3m34.ipfs.dweb.link/)
+
 ## Features
 
 - 🌈 **Rainbow Bands Visualization**: 10 colored bands showing different price zones from "BUY" to "Maximum Bubble Territory"
