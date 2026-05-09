@@ -211,6 +211,7 @@ class EthereumRainbowChart {
         }
     }
 
+    // get prices from Binance API
     async fetchFromBinance() {
         const symbols = ['ETHUSDT'];
         const priceHistory = [];
